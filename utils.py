@@ -39,7 +39,7 @@ def seed_torch(seed=0):
 def generate_yolo_output(x, cls=2, anchor=[[116,90], [156,198], [373,326]], H=13, W=13):
     """
     x: N * list_n
-        list_n : m * [bx, by, bw, bh, cls]
+        list_n : m * [bx, by, bw, bh, xconf, cls]
     y : N * (len(anchor) * (5 + cls)) * H * W
     """
     N = len(x)
@@ -99,6 +99,6 @@ def generate_yolo_box_list(x, cls=2, anchor=[[116,90], [156,198], [373,326]]):
                     # class decision
                     x[n, st + 4, cy, cx] = torch.max(score)
                     x[n, st + 5, cy, cx] = torch.argmax(score)
-                    box_list.append(x[n, st:st + 6])
+                    box_list.append(x[n, st:st + 6, cy, cx])
         x_list.append(box_list)
     return x_list
